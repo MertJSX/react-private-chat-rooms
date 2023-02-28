@@ -28,6 +28,9 @@
                 color: $color2;
             }
         }
+        .system-msg {
+            color: aqua;
+        }
     }
     form {
         input {
@@ -54,6 +57,7 @@
             font-size: 30px;
             padding: 1%;
             width: 97.5%;
+            color: $color2;
         }
     }
 }

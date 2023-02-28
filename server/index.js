@@ -1,18 +1,20 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors")
+const dotenv = require("dotenv")
+dotenv.config()
 const {router} = require("./api/router");
 const app = express();
 const PORT = 5000;
 const server = http.createServer(app);
 const {Server} = require("socket.io");
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_IP || 'http://localhost:3000',
     methods: ["GET","POST"]
 }
 const io = new Server(server,{
     cors: {
-        origin: 'http://localhost:3000',
+        origin: process.env.CLIENT_IP || 'http://localhost:3000',
         methods: ["GET", "POST"]
     }
 });
@@ -22,7 +24,7 @@ app.use(router)
 io.on("connection", (socket) => {
     let name;
     let room;
-    console.log("User was connected");
+    console.log(process.env.CLIENT_IP);
     socket.on("join", (res) => {
         console.log(res);
         socket.name = res.name;

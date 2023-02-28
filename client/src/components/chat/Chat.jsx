@@ -2,8 +2,10 @@ import "./chat.scss";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`);
+
 const Chat = () => {
+  
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -12,18 +14,22 @@ const Chat = () => {
   const params = new URLSearchParams(search);
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_IP);
     socket.on("connected", (res) => {
       const chat = document.getElementById("chat");
-      chat.innerHTML += `<p><strong>${res.name}</strong> was joined the chat!</p>`;
+      chat.innerHTML += `<p class="system-msg"><strong>${res.name}</strong> was joined the chat!</p>`;
+      chat.scrollBy(0,100);
     });
     socket.on("disconnected", (res) => {
       const chat = document.getElementById("chat");
-      chat.innerHTML += `<p><strong>${res.name}</strong> was left the chat.</p>`
+      chat.innerHTML += `<p class="system-msg"><strong>${res.name}</strong> was left the chat.</p>`
+      chat.scrollBy(0,100);
     })
     socket.on("chat", (res) => {
       console.log("Geldi");
       const chat = document.getElementById("chat");
       chat.innerHTML += `<p><strong>${res.name}</strong>: ${res.message}</p>`;
+      chat.scrollBy(0,100);
     });
     socket.on("disconnect", (reason) => {
       if (reason === "io server disconnect") {
@@ -49,6 +55,7 @@ const Chat = () => {
                 name: name,
                 message: message,
               });
+              setMessage("")
             }}
           >
             <input
