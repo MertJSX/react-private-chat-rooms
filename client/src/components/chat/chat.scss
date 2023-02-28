@@ -1,0 +1,59 @@
+@import "../../global.scss";
+
+.chat-container {
+    display: block;
+    margin: auto;
+    max-width: 800px;
+    border: 2px solid $color;
+    border-radius: 5px;
+    padding: 5px;
+    h1 {
+        background-color: #323333;
+        text-align: center;
+    }
+    .chat-content {
+        background-color: #323333;
+        border: 2px solid $color;
+        padding: 5px;
+        height: 400px;
+        overflow-y: auto;
+        p {
+            font-size: 25px;
+            padding: 5px;
+            background-color: #282929;
+            &:nth-child(2n) {
+                background-color: #323232;
+            }
+            strong {
+                color: $color2;
+            }
+        }
+    }
+    form {
+        input {
+            width: 97.5%;
+            font-size: 25px;
+            background-color: #323333;
+            outline: none;
+            padding: 1%;
+            border: 2px solid $color;
+        }
+        button {
+            background-color: #323333;
+            width: 100%;
+            font-size: 25px;
+            height: 45px;
+            border: 2px solid $color;
+            font-weight: 700;
+            &:hover {
+                background-color: #3f3f3f;
+            }
+        }
+        .usrname {
+            text-align: center;
+            font-size: 30px;
+            padding: 1%;
+            width: 97.5%;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+$color: #23df75;
+$color2: #5fd192;
+$chat-white: #dedddd;
+
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-decoration: none;
+    color: $chat-white;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #292828;
+}
+.no-page {
+    h1 {
+        text-align: center;
+    }
+}
