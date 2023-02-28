@@ -23,16 +23,14 @@
         border: 2px solid $color;
     }
     button {
-        background-color: $color;
-        color: #000000;
+        background-color: #3c3c3c;
         width: 100%;
         font-size: 35px;
         height: 45px;
         border: 2px solid $color;
         font-weight: 800;
-        //text-shadow: 2px 2px black;
         &:hover {
-            background-color: #28ee7e;
+            background-color: #3f3f3f;
         }
     }
 }
