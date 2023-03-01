@@ -3,10 +3,11 @@ import { useEffect, useState} from "react";
 import io from "socket.io-client";
 import commandRun from "./commands";
 
-const socket = io.connect(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`);
-console.log("Socket logged in");
-
 const Chat = () => {
+  let [socket, setSocket] = useState()
+  useEffect(() => {
+    setSocket(io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`))
+  }, [socket])
   
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState("");
