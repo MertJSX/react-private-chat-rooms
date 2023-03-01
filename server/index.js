@@ -3,16 +3,16 @@ const http = require("http");
 const cors = require("cors")
 const dotenv = require("dotenv")
 dotenv.config()
-const {router} = require("./api/router");
+const { router } = require("./api/router");
 const app = express();
 const PORT = 5000;
 const server = http.createServer(app);
-const {Server} = require("socket.io");
+const { Server } = require("socket.io");
 const corsOptions = {
     origin: process.env.CLIENT_IP || 'http://localhost:3000',
-    methods: ["GET","POST"]
+    methods: ["GET", "POST"]
 }
-const io = new Server(server,{
+const io = new Server(server, {
     cors: {
         origin: process.env.CLIENT_IP || 'http://localhost:3000',
         methods: ["GET", "POST"]
@@ -45,13 +45,26 @@ io.on("connection", (socket) => {
         }
     })
     socket.on("disconnect", () => {
-        console.log("User Disconnected "+socket.name);
+        console.log("User Disconnected " + socket.name);
         io.to(socket.room).emit("disconnected", {
             name: socket.name
         })
     })
-    socket.on("sex", (res) => {
+    socket.on("whisper", (res) => {
         console.log(res);
+        console.log("WHISPER " + res.user + " === " + socket.name);
+        console.log("Receive: " + socket.name);
+        if (res.user !== socket.name) {
+            io.emit(`whisper-${res.user}`, {
+                name: res.sender,
+                message: res.msg
+            })
+        }
+        io.emit(`whisper-${res.sender}`, {
+            name: res.sender,
+            message: res.msg
+        })
+
     })
 })
 

@@ -31,6 +31,17 @@
         .system-msg {
             color: aqua;
         }
+        .whisper-sender {
+            color: $color2-secret;
+        }
+        .cmd {
+            color: #ffffff;
+            background-color: #161717;
+        }
+        .whisper {
+            color: gray;
+            font-style: italic;
+        }
     }
     form {
         input {
