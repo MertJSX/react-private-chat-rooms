@@ -7,8 +7,9 @@ import React from "react";
 //const socket = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
 
 const Chat = () => {
-  
+  const [auth, setAuth] = useState("")
   const [connected, setConnected] = useState(false);
+  const [usrCount, setUCount] = useState(0)
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const connectSocket = useRef()
@@ -31,6 +32,10 @@ const Chat = () => {
         <abbr title="Whisper..."><strong>${res.name}</strong></abbr> was joined the chat!</p>`;
         chat.scrollBy(0,100);
 
+        setUCount(res.usrCount);
+        socket.emit("auth", {
+          type: "connect"
+        })
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
         for (let i = 0; i < count; i++) {
@@ -48,9 +53,12 @@ const Chat = () => {
         chat.innerHTML += `<p class="system-msg">
         <abbr title="Whisper..."><strong>${res.name}</strong></abbr> was left the chat.</p>`
         chat.scrollBy(0,100);
-
+        setUCount(res.usrCount);
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
+        socket.emit("auth", {
+          type: "disconnect"
+        })
         for (let i = 0; i < count; i++) {
           const sender = senders[i];
           sender.addEventListener("click", function(e) {
@@ -97,6 +105,10 @@ const Chat = () => {
             document.getElementById("msg").focus()
           })
         }
+      })
+      socket.on("auth", (res) => {
+        console.log("AUTH");
+        setAuth(res.auth)
       }) 
     }
   }, [connected, name, socket]);
@@ -105,8 +117,13 @@ const Chat = () => {
   return (
     <div>
       <div className="chat-container">
-        <h1>{params.get("id") ? `${name} - Room: ${params.get("id")}` : "Chat"}</h1>
-        {connected ? <div className="chat-content" id="chat"></div> : null}
+        <h1>{params.get("id") ? `${name} - Room: ${params.get("id")}` : "Please join any room!"}</h1>
+        {connected ? 
+        <div>
+          <h1>{usrCount ? `Connected: ${usrCount} - Auth: ${auth}` : "Loading..."}</h1>
+          <div className="chat-content" id="chat">
+        </div></div>
+         : null}
         {connected ? (
           <form
             onSubmit={(e) => {

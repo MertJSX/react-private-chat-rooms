@@ -33,23 +33,21 @@ io.on("connection", (socket) => {
         socket.roomID = res.room;
         socket.join(res.room);
         socket.entryNumber = io.sockets.adapter.rooms.get(socket.roomID).size;
-        if (socket.entryNumber === 1) {
-            socket.auth = "admin";
-        } else {
-            socket.auth = "user";
-        }
+        let usrCount = io.sockets.adapter.rooms.get(socket.roomID).size;
+
         console.log(
-        "Room: ".green+socket.roomID +
-        "\n Name: ".blue+socket.name + 
-        "\n entryNumber: ".blue + socket.entryNumber + 
-        "\n Auth: ".blue + socket.auth);
-        
+            "Room: ".green + socket.roomID +
+            "\n Name: ".blue + socket.name +
+            "\n entryNumber: ".blue + socket.entryNumber +
+            "\n Auth: ".blue + socket.auth
+        );
+
         io.to(res.room).emit("connected", {
-            name: res.name
+            name: res.name,
+            usrCount: usrCount
         })
     })
     socket.on("chat", (res) => {
-        //console.log("Gidiyor");
         if (res.message !== "") {
             io.to(res.room).emit("chat", {
                 name: res.name,
@@ -57,12 +55,36 @@ io.on("connection", (socket) => {
             })
         }
     })
-    socket.on("disconnect", () => {
-        console.log("User Disconnected " + socket.name);
-        //console.log(socket.to(room));
-        io.to(socket.roomID).emit("disconnected", {
-            name: socket.name
+    socket.on("auth", (res) => {
+        console.log(res);
+        if (res.type === "disconnect") {
+            socket.entryNumber -= 1;
+            console.log(socket.entryNumber);
+        }
+        if (socket.entryNumber === 1) {
+            socket.auth = "admin";
+        } else {
+            socket.auth = "user";
+        }
+        io.to(socket.id).emit("auth", {
+            auth: socket.auth
         })
+    })
+    socket.on("disconnect", () => {
+        if (socket.name !== undefined) {
+            console.log("User Disconnected " + socket.name);
+            console.log(socket.id);
+            let usrCount = io.sockets.adapter.rooms.get(socket.roomID);
+            console.log(usrCount);
+            if (usrCount.size) {
+                io.to(socket.roomID).emit("disconnected", {
+                    name: socket.name,
+                    auth: socket.auth,
+                    usrCount: usrCount.size
+                })   
+            }
+        }
+
     })
     socket.on("whisper", (res) => {
         console.log(res);
