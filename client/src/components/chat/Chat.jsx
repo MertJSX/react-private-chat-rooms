@@ -3,6 +3,7 @@ import { useEffect, useState, useRef} from "react";
 import io from "socket.io-client";
 import commandRun from "./commands";
 import React from "react";
+import ReactMarkdown from 'react-markdown'
 
 //const socket = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
 
@@ -72,7 +73,11 @@ const Chat = () => {
       socket.on("chat", (res) => {
         console.log("Geldi");
         const chat = document.getElementById("chat");
-        chat.innerHTML += `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
+        const sex = `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
+        //chat.innerHTML += `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
+        console.log(sex);
+        chat.innerHTML += (<p><abbr title="Whisper..."><strong>{res.name}</strong></abbr>: <ReactMarkdown>{res.message}</ReactMarkdown></p>)
+        //<ReactMarkdown>{sex}</ReactMarkdown>
         chat.scrollBy(0,100);
 
         const senders = document.getElementsByTagName("strong");
@@ -108,8 +113,12 @@ const Chat = () => {
       })
       socket.on(`kick-${name}`, () => {
         console.log("Kendimi kicklemeliyim");
-        window.open("about:blank", "_self");
-        window.close();
+        //const navigate = useNavigate()
+        // window.open("about:blank", "_self");
+        // window.close();
+        console.log(window.location);
+        window.location.search = ""
+        window.location.pathname = "/kicked"
       })
       socket.on("auth", (res) => {
         console.log("AUTH");
@@ -126,8 +135,8 @@ const Chat = () => {
         {connected ? 
         <div>
           <h1>{usrCount ? `Connected: ${usrCount} - Auth: ${auth}` : "Loading..."}</h1>
-          <div className="chat-content" id="chat">
-        </div></div>
+          <div className="chat-content" id="chat"></div>
+        </div>
          : null}
         {connected ? (
           <form
