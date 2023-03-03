@@ -38,8 +38,7 @@ io.on("connection", (socket) => {
         console.log(
             "Room: ".green + socket.roomID +
             "\n Name: ".blue + socket.name +
-            "\n entryNumber: ".blue + socket.entryNumber +
-            "\n Auth: ".blue + socket.auth
+            "\n entryNumber: ".blue + socket.entryNumber
         );
 
         io.to(res.room).emit("connected", {
@@ -75,8 +74,7 @@ io.on("connection", (socket) => {
             console.log("User Disconnected " + socket.name);
             console.log(socket.id);
             let usrCount = io.sockets.adapter.rooms.get(socket.roomID);
-            console.log(usrCount);
-            if (usrCount.size) {
+            if (usrCount !== undefined) {
                 io.to(socket.roomID).emit("disconnected", {
                     name: socket.name,
                     auth: socket.auth,
@@ -101,6 +99,12 @@ io.on("connection", (socket) => {
             message: res.msg
         })
 
+    })
+    socket.on("kick", (res) => {
+        console.log(res.name);
+        if (socket.auth === "admin") {
+            io.to(socket.roomID).emit(`kick-${res.name}`)
+        }
     })
 })
 

@@ -10,6 +10,14 @@ export default function commandRun(value, name, chat, socket) {
             sender: name,
             msg: msg
         })
+    } else if (value.substr(0, 5) === "/kick") {
+        //console.log("You are kicked :d");
+        const split = value.split("-");
+        console.log(split[1]);
+
+        socket.emit("kick", {
+            name: split[1]
+        })
     } else {
         switch (value) {
             case "/cls":
@@ -24,6 +32,7 @@ export default function commandRun(value, name, chat, socket) {
             <span class="cmd">/help</span> - Help <br>
             <span class="cmd">/cls</span> - Clear chat <br>
             <span class="cmd">/w -|name| -|message|</span> - Whisper to user <br>
+            <span class="cmd">/kick -|name|</span> - Kick User (You must be Admin)<br>
             <br>
             </p>`;
                 chat.scrollBy(0, 1000);

@@ -106,6 +106,11 @@ const Chat = () => {
           })
         }
       })
+      socket.on(`kick-${name}`, () => {
+        console.log("Kendimi kicklemeliyim");
+        window.open("about:blank", "_self");
+        window.close();
+      })
       socket.on("auth", (res) => {
         console.log("AUTH");
         setAuth(res.auth)
