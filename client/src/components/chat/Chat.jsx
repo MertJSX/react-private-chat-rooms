@@ -1,23 +1,29 @@
 import "./chat.scss";
-import { useEffect, useState} from "react";
+import { useEffect, useState, useRef} from "react";
 import io from "socket.io-client";
 import commandRun from "./commands";
+import React from "react";
+
+//const socket = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
 
 const Chat = () => {
-  let [socket, setSocket] = useState()
-  useEffect(() => {
-    setSocket(io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`))
-  }, [socket])
   
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+  const connectSocket = useRef()
+  const socket = connectSocket.current;
 
   const search = window.location.search;
   const params = new URLSearchParams(search);
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_IP);
+    console.log("Connected");
+    connectSocket.current = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
+  },[])
+  
+  useEffect(() => {
+    //console.log(process.env.REACT_APP_IP);
     if (connected) {
       socket.on("connected", (res) => {
         const chat = document.getElementById("chat");
@@ -93,7 +99,7 @@ const Chat = () => {
         }
       }) 
     }
-  }, [connected, name]);
+  }, [connected, name, socket]);
 
 
   return (
@@ -171,4 +177,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default React.memo(Chat);

@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
-const cors = require("cors")
+const cors = require("cors");
+const colors = require('colors');
 const dotenv = require("dotenv")
 dotenv.config()
 const { router } = require("./api/router");
@@ -23,20 +24,32 @@ app.use(router)
 
 io.on("connection", (socket) => {
     let name;
-    let room;
+    let roomID;
+    let entryNumber;
+    let auth;
     console.log(process.env.CLIENT_IP);
     socket.on("join", (res) => {
-        console.log(res);
         socket.name = res.name;
-        socket.room = res.room;
-        console.log(socket.name + " " + socket.room);
+        socket.roomID = res.room;
         socket.join(res.room);
+        socket.entryNumber = io.sockets.adapter.rooms.get(socket.roomID).size;
+        if (socket.entryNumber === 1) {
+            socket.auth = "admin";
+        } else {
+            socket.auth = "user";
+        }
+        console.log(
+        "Room: ".green+socket.roomID +
+        "\n Name: ".blue+socket.name + 
+        "\n entryNumber: ".blue + socket.entryNumber + 
+        "\n Auth: ".blue + socket.auth);
+        
         io.to(res.room).emit("connected", {
             name: res.name
         })
     })
     socket.on("chat", (res) => {
-        console.log("Gidiyor");
+        //console.log("Gidiyor");
         if (res.message !== "") {
             io.to(res.room).emit("chat", {
                 name: res.name,
@@ -46,7 +59,8 @@ io.on("connection", (socket) => {
     })
     socket.on("disconnect", () => {
         console.log("User Disconnected " + socket.name);
-        io.to(socket.room).emit("disconnected", {
+        //console.log(socket.to(room));
+        io.to(socket.roomID).emit("disconnected", {
             name: socket.name
         })
     })
