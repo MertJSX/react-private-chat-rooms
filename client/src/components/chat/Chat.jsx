@@ -72,9 +72,7 @@ const Chat = () => {
       socket.on("chat", (res) => {
         console.log("Geldi");
         const chat = document.getElementById("chat");
-        //const sex = `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
         chat.innerHTML += `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
-        //<ReactMarkdown>{sex}</ReactMarkdown>
         chat.scrollBy(0,100);
 
         const senders = document.getElementsByTagName("strong");
@@ -200,6 +198,7 @@ const Chat = () => {
             <button type="submit">CONNECT</button>
           </form>
         )}
+        <h2>By MertJS</h2>
       </div>
     </div>
   );

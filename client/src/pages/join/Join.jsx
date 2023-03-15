@@ -22,6 +22,7 @@ const Join = () => {
            required />
           <button type="submit">JOIN</button>
         </form>
+        <h2>By MertJS</h2>
       </div>
     </div>
   );
