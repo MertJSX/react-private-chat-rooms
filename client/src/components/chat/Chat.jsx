@@ -29,7 +29,7 @@ const Chat = () => {
       socket.on("connected", (res) => {
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="system-msg">
-        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> was joined the chat!</p>`;
+        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> has joined the chat!</p>`;
         chat.scrollBy(0,100);
 
         setUCount(res.usrCount);
@@ -51,7 +51,7 @@ const Chat = () => {
       socket.on("disconnected", (res) => {
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="system-msg">
-        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> was left the chat.</p>`
+        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> has left the chat.</p>`
         chat.scrollBy(0,100);
         setUCount(res.usrCount);
         const senders = document.getElementsByTagName("strong");
