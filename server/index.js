@@ -86,7 +86,7 @@ io.on("connection", (socket) => {
     })
     socket.on("whisper", (res) => {
         console.log(res);
-        console.log("WHISPER " + res.user + " === " + socket.name);
+        console.log("WHISPER " + res.user + " to " + socket.name);
         console.log("Receive: " + socket.name);
         if (res.user !== socket.name) {
             io.emit(`whisper-${res.user}`, {

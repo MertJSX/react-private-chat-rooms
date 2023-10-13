@@ -1,5 +1,5 @@
 import "./chat.scss";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import commandRun from "./commands";
 import React from "react";
@@ -7,12 +7,12 @@ import React from "react";
 //const socket = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
 
 const Chat = () => {
-  const [auth, setAuth] = useState("")
+  const [auth, setAuth] = useState("");
   const [connected, setConnected] = useState(false);
-  const [usrCount, setUCount] = useState(0)
+  const [usrCount, setUCount] = useState(0);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
-  const connectSocket = useRef()
+  const connectSocket = useRef();
   const socket = connectSocket.current;
 
   const search = window.location.search;
@@ -20,9 +20,11 @@ const Chat = () => {
 
   useEffect(() => {
     console.log("Connected");
-    connectSocket.current = io(`${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`)
-  },[])
-  
+    connectSocket.current = io(
+      `${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/`
+    );
+  }, []);
+
   useEffect(() => {
     //console.log(process.env.REACT_APP_IP);
     if (connected) {
@@ -30,60 +32,60 @@ const Chat = () => {
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="system-msg">
         <abbr title="Whisper..."><strong>${res.name}</strong></abbr> has joined the chat!</p>`;
-        chat.scrollBy(0,100);
+        chat.scrollBy(0, 100);
 
         setUCount(res.usrCount);
         socket.emit("auth", {
-          type: "connect"
-        })
+          type: "connect",
+        });
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
         for (let i = 0; i < count; i++) {
           const sender = senders[i];
-          sender.addEventListener("click", function(e) {
+          sender.addEventListener("click", function (e) {
             console.log(e.target.innerHTML);
-            setMessage(`/w -${e.target.innerHTML} -`)
-            document.getElementById("msg").focus()
-          })
+            setMessage(`/w ${e.target.innerHTML} `);
+            document.getElementById("msg").focus();
+          });
         }
       });
 
       socket.on("disconnected", (res) => {
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="system-msg">
-        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> has left the chat.</p>`
-        chat.scrollBy(0,100);
+        <abbr title="Whisper..."><strong>${res.name}</strong></abbr> has left the chat.</p>`;
+        chat.scrollBy(0, 100);
         setUCount(res.usrCount);
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
         socket.emit("auth", {
-          type: "disconnect"
-        })
+          type: "disconnect",
+        });
         for (let i = 0; i < count; i++) {
           const sender = senders[i];
-          sender.addEventListener("click", function(e) {
+          sender.addEventListener("click", function (e) {
             console.log(e.target.innerHTML);
-            setMessage(`/w -${e.target.innerHTML} -`)
-            document.getElementById("msg").focus()
-          })
+            setMessage(`/w ${e.target.innerHTML} `);
+            document.getElementById("msg").focus();
+          });
         }
-      })
+      });
 
       socket.on("chat", (res) => {
         console.log("Geldi");
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
-        chat.scrollBy(0,100);
+        chat.scrollBy(0, 100);
 
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
         for (let i = 0; i < count; i++) {
           const sender = senders[i];
-          sender.addEventListener("click", function(e) {
+          sender.addEventListener("click", function (e) {
             console.log(e.target.innerHTML);
-            setMessage(`/w -${e.target.innerHTML} -`)
-            document.getElementById("msg").focus()
-          })
+            setMessage(`/w ${e.target.innerHTML} `);
+            document.getElementById("msg").focus();
+          });
         }
       });
 
@@ -93,56 +95,73 @@ const Chat = () => {
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="whisper">
         <abbr title="Whisper..."><strong class="whisper-sender">${res.name}</strong></abbr>: ${res.message}</p>`;
-        chat.scrollBy(0,100);
+        chat.scrollBy(0, 100);
 
         const senders = document.getElementsByTagName("strong");
         const count = senders.length;
         for (let i = 0; i < count; i++) {
           const sender = senders[i];
-          sender.addEventListener("click", function(e) {
+          sender.addEventListener("click", function (e) {
             console.log(e.target.innerHTML);
-            setMessage(`/w -${e.target.innerHTML} -`)
-            document.getElementById("msg").focus()
-          })
+            setMessage(`/w ${e.target.innerHTML} `);
+            document.getElementById("msg").focus();
+          });
         }
-      })
+      });
       socket.on(`kick-${name}`, () => {
         console.log("Kendimi kicklemeliyim");
         //const navigate = useNavigate()
         // window.open("about:blank", "_self");
         // window.close();
         console.log(window.location);
-        window.location.search = ""
-        window.location.pathname = "/kicked"
-      })
+        window.location.search = "";
+        window.location.pathname = "/kicked";
+      });
       socket.on("auth", (res) => {
         console.log("AUTH");
-        setAuth(res.auth)
-      }) 
+        setAuth(res.auth);
+      });
     }
   }, [connected, name, socket]);
-
 
   return (
     <div>
       <div className="chat-container">
-        <h1>{params.get("id") ? `${name} - Room: ${params.get("id")}` : "Please join any room!"}</h1>
-        {connected ? 
-        <div>
-          <h1>{usrCount ? `Connected: ${usrCount} - Auth: ${auth.charAt(0).toUpperCase() + auth.substring(1)}` : "Loading..."}</h1>
-          <div className="chat-content" id="chat"></div>
-        </div>
-         : null}
+        <h1>
+          {params.get("id")
+            ? `${name} - Room: ${params.get("id")}`
+            : "Please join any room!"}
+        </h1>
+        {connected ? (
+          <div>
+            <h1>
+              {usrCount
+                ? `Connected: ${usrCount} - Auth: ${
+                    auth.charAt(0).toUpperCase() + auth.substring(1)
+                  }`
+                : "Loading..."}
+            </h1>
+            <div className="chat-content" id="chat"></div>
+          </div>
+        ) : null}
         {connected ? (
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              socket.emit("chat", {
-                room: params.get("id"),
-                name: name,
-                message: message,
-              });
-              setMessage("")
+              if (message !== "") {
+                const chat = document.getElementById("chat");
+                if (message.charAt(0) === "/") {
+                  commandRun(message, name, chat, socket);
+                } else {
+                  socket.emit("chat", {
+                    room: params.get("id"),
+                    name: name,
+                    message: message,
+                  });
+                }
+                setMessage("");
+              }
+              setMessage("");
             }}
           >
             <input
@@ -153,7 +172,7 @@ const Chat = () => {
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
-               onKeyDown={(e) => {
+              onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   if (message !== "") {
                     const chat = document.getElementById("chat");
@@ -163,13 +182,13 @@ const Chat = () => {
                       socket.emit("chat", {
                         room: params.get("id"),
                         name: name,
-                        message: message
-                    })
+                        message: message,
+                      });
                     }
-                  setMessage("");
+                    setMessage("");
                   }
-              }
-               }}
+                }
+              }}
             />
             <br />
             <button type="submit">SUBMIT</button>
