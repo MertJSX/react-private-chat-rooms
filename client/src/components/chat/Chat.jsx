@@ -210,7 +210,7 @@ const Chat = () => {
             <button type="submit">CONNECT</button>
           </form>
         )}
-        <h2>By MertJSX</h2>
+        <h2>By Mert<span>JSX</span></h2>
       </div>
     </div>
   );

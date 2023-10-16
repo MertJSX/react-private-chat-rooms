@@ -22,7 +22,7 @@ const Join = () => {
            required />
           <button type="submit">JOIN</button>
         </form>
-        <h2>By MertJS</h2>
+        <h2>By Mert<span>JSX</span></h2>
       </div>
     </div>
   );
