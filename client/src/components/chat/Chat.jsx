@@ -26,7 +26,6 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    //console.log(process.env.REACT_APP_IP);
     if (connected) {
       socket.on("connected", (res) => {
         const chat = document.getElementById("chat");
@@ -72,7 +71,6 @@ const Chat = () => {
       });
 
       socket.on("chat", (res) => {
-        console.log("Geldi");
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p><abbr title="Whisper..."><strong>${res.name}</strong></abbr>: ${res.message}</p>`;
         chat.scrollBy(0, 100);
@@ -90,8 +88,6 @@ const Chat = () => {
       });
 
       socket.on(`whisper-${name}`, (res) => {
-        console.log("Whisper geldi");
-        console.log(res);
         const chat = document.getElementById("chat");
         chat.innerHTML += `<p class="whisper">
         <abbr title="Whisper..."><strong class="whisper-sender">${res.name}</strong></abbr>: ${res.message}</p>`;
@@ -109,16 +105,13 @@ const Chat = () => {
         }
       });
       socket.on(`kick-${name}`, () => {
-        console.log("Kendimi kicklemeliyim");
         //const navigate = useNavigate()
         // window.open("about:blank", "_self");
         // window.close();
-        console.log(window.location);
         window.location.search = "";
         window.location.pathname = "/kicked";
       });
       socket.on("auth", (res) => {
-        console.log("AUTH");
         setAuth(res.auth);
       });
     }
@@ -127,7 +120,7 @@ const Chat = () => {
   return (
     <div>
       <div className="chat-container">
-        <h1>
+        <h1 className="title">
           {params.get("id")
             ? `${name} - Room: ${params.get("id")}`
             : "Please join any room!"}
@@ -217,7 +210,7 @@ const Chat = () => {
             <button type="submit">CONNECT</button>
           </form>
         )}
-        <h2>By MertJS</h2>
+        <h2>By MertJSX</h2>
       </div>
     </div>
   );

@@ -27,7 +27,6 @@ io.on("connection", (socket) => {
     let roomID;
     let entryNumber;
     let auth;
-    console.log(process.env.CLIENT_IP);
     socket.on("join", (res) => {
         socket.name = res.name;
         socket.roomID = res.room;
@@ -55,7 +54,8 @@ io.on("connection", (socket) => {
         }
     })
     socket.on("auth", (res) => {
-        console.log(res);
+        console.log(`Room: `.green + socket.roomID);
+        console.log(" " + socket.name + " has connected!".yellow);
         if (res.type === "disconnect") {
             socket.entryNumber -= 1;
             console.log(socket.entryNumber);
@@ -71,8 +71,8 @@ io.on("connection", (socket) => {
     })
     socket.on("disconnect", () => {
         if (socket.name !== undefined) {
-            console.log("User Disconnected " + socket.name);
-            console.log(socket.id);
+            console.log(`Room: `.green + socket.roomID);
+            console.log(" " + socket.name + " has disconnected!".yellow);
             let usrCount = io.sockets.adapter.rooms.get(socket.roomID);
             if (usrCount !== undefined) {
                 io.to(socket.roomID).emit("disconnected", {
@@ -85,9 +85,6 @@ io.on("connection", (socket) => {
 
     })
     socket.on("whisper", (res) => {
-        console.log(res);
-        console.log("WHISPER " + res.user + " to " + socket.name);
-        console.log("Receive: " + socket.name);
         if (res.user !== socket.name) {
             io.emit(`whisper-${res.user}`, {
                 name: res.sender,
@@ -101,7 +98,6 @@ io.on("connection", (socket) => {
 
     })
     socket.on("kick", (res) => {
-        console.log(res.name);
         if (socket.auth === "admin") {
             io.to(socket.roomID).emit(`kick-${res.name}`)
         }
